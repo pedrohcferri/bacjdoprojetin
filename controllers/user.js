@@ -44,9 +44,31 @@ export const createCategory = (req, res) => {
     `
     db.query(query,[category_name],(err) => {
         if(err){
-            console.error("Erro ao inserir o usuário:", err.sqlMessage || err);
+            console.error("Erro ao inserir categoria", err.sqlMessage || err);
         }
-        return res.status(201).json({ message: "User created successfully"});
+        return res.status(201).json({ message: "Categoria criada com successo"});
     })
 
+}
+
+
+export const createProduct = (req,res) => {
+    console.log(req.body)
+    const {product_name , description, price, stock} = req.body;
+
+    if ( !product_name || !description ||price === undefined || stock === undefined){
+        return res.status(400).json({erro: "Campo"})
+    }
+    const query = `
+    INSERT INTO products (product_name , description, price, stock)
+    VALUES (?, ?, ?, ?)
+    `;
+    db.query(query, [product_name , description, price, stock], (err) => {
+        if(err){
+            console.error("Erro ao inserir Produto", err.sqlMessage || err);
+            return res.status(500).json({ erro: "Erro no servidor" });
+        }
+
+        return res.status(201).json({ message: "Produto criado com successo"});
+    })
 }
